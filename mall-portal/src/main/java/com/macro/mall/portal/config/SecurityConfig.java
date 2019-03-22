@@ -18,6 +18,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 
 /**
  * SpringSecurity的配置
@@ -80,6 +85,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .tokenValiditySeconds(1800)
 //                .key("token_key")
                 .and()
+                .cors()
+                .and()
                 .csrf()
                 .disable();//开启basic认证登录后可以调用需要认证的接口
     }
@@ -110,5 +117,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter(){
         return new JwtAuthenticationTokenFilter();
+    }
+
+    //配置那些域可以访问的我的资源
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+     CorsConfiguration configuration = new CorsConfiguration();
+    configuration.addAllowedOrigin("*");
+    configuration.addAllowedHeader("*");
+    configuration.addAllowedMethod("*");
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration);
+    return source;
     }
 }
