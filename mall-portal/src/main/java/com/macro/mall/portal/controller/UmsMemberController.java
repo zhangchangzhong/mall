@@ -84,4 +84,10 @@ public class UmsMemberController {
         return new CommonResult().success(data);
     }
 
+    @ApiOperation(value = "登出功能")
+    @RequestMapping(value = "/logout", method = RequestMethod.POST)
+    @ResponseBody
+    public Object logout() {
+        return new CommonResult().success(null);
+    }
 }
