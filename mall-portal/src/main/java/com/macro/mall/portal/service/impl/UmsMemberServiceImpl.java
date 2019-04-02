@@ -15,15 +15,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+<<<<<<< HEAD
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
+=======
+>>>>>>> 21c222e2a492f0c93f027d63c3c3c1b876ecc409
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+<<<<<<< HEAD
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+=======
+import org.springframework.security.crypto.password.PasswordEncoder;
+>>>>>>> 21c222e2a492f0c93f027d63c3c3c1b876ecc409
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -49,7 +56,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
     private RedisService redisService;
     @Value("${redis.key.prefix.authCode}")
     private String REDIS_KEY_PREFIX_AUTH_CODE;
-    @Value("${authCode.expire.seconds}")
+    @Value("${redis.key.expire.authCode}")
     private Long AUTH_CODE_EXPIRE_SECONDS;
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -92,7 +99,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
         UmsMember umsMember = new UmsMember();
         umsMember.setUsername(username);
         umsMember.setPhone(telephone);
-        umsMember.setPassword(passwordEncoder.encodePassword(password, null));
+        umsMember.setPassword(passwordEncoder.encode(password));
         umsMember.setCreateTime(new Date());
         umsMember.setStatus(1);
         //获取默认会员等级并设置
@@ -133,7 +140,7 @@ public class UmsMemberServiceImpl implements UmsMemberService {
             return new CommonResult().failed("验证码错误");
         }
         UmsMember umsMember = memberList.get(0);
-        umsMember.setPassword(passwordEncoder.encodePassword(password,null));
+        umsMember.setPassword(passwordEncoder.encode(password));
         memberMapper.updateByPrimaryKeySelective(umsMember);
         return new CommonResult().success("密码修改成功",null);
     }
