@@ -1,5 +1,7 @@
 package com.macro.mall.portal.controller;
 
+import com.macro.mall.dto.OmsOrderQueryParam;
+import com.macro.mall.model.OmsOrder;
 import com.macro.mall.portal.domain.CommonResult;
 import com.macro.mall.portal.domain.ConfirmOrderResult;
 import com.macro.mall.portal.domain.OrderParam;
@@ -9,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 订单管理Controller
@@ -54,5 +58,15 @@ public class OmsPortalOrderController {
     public Object cancelOrder(Long orderId){
         portalOrderService.sendDelayMessageCancelOrder(orderId);
         return new CommonResult().success(null);
+    }
+
+    @ApiOperation("获取用户的订单列表")
+    @RequestMapping(value = "/getUserOrderList",method = RequestMethod.POST)
+    @ResponseBody
+    public Object getUserOrderList(OmsOrderQueryParam queryParam,
+                                   @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                   @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum) {
+        List<OmsOrder> orderList = portalOrderService.list(queryParam, pageSize, pageNum);
+        return new com.macro.mall.dto.CommonResult().pageSuccess(orderList);
     }
 }

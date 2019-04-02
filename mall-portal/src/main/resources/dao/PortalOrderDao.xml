@@ -7,6 +7,34 @@
                     resultMap="com.macro.mall.mapper.OmsOrderItemMapper.BaseResultMap">
         </collection>
     </resultMap>
+    <select id="getList" resultMap="com.macro.mall.mapper.OmsOrderMapper.BaseResultMap">
+        SELECT *
+        FROM
+        oms_order
+        WHERE
+        delete_status = 0  AND member_id = #{memberId}
+        <if test="queryParam.orderSn!=null and queryParam.orderSn!=''">
+            AND order_sn = #{queryParam.orderSn}
+        </if>
+        <if test="queryParam.status!=null">
+            AND `status` = #{queryParam.status}
+        </if>
+        <if test="queryParam.sourceType!=null">
+            AND source_type = #{queryParam.sourceType}
+        </if>
+        <if test="queryParam.orderType!=null">
+            AND order_type = #{queryParam.orderType}
+        </if>
+        <if test="queryParam.createTime!=null and queryParam.createTime!=''">
+            AND create_time LIKE concat(#{queryParam.createTime},"%")
+        </if>
+        <if test="queryParam.receiverKeyword!=null and queryParam.receiverKeyword!=''">
+            AND (
+            receiver_name LIKE concat("%",#{queryParam.receiverKeyword},"%")
+            OR receiver_phone LIKE concat("%",#{queryParam.receiverKeyword},"%")
+            )
+        </if>
+    </select>
     <select id="getDetail" resultMap="orderDetailMap">
         SELECT
             o.id,
